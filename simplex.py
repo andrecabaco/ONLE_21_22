@@ -8,14 +8,43 @@ import numpy as np
     Reference: https://en.wikipedia.org/wiki/Nelder%E2%80%93Mead_method
 '''
 
+def ackley_function(x):
+  #returns the point value of the given coordinate
+  part_1 = -0.2*math.sqrt(0.5*((x[0])*(x[0]) + (x[1])*(x[1])))
+  part_2 = 0.5*(math.cos(2*math.pi*(x[0])) + math.cos(2*math.pi*(x[1])))
+  value = math.exp(1) + 20 -20*math.exp(part_1) - math.exp(part_2)
+  #returning the value
+  return value
+
+def benchmark_2022(x):
+    L=0.3556
+    g=9.81
+    F=2722.*g
+    E=200.e9
+    c_viga=2935.
+    c_solda=67413.
+
+    #Custo
+    f1=(c_solda*((x[0])**2)*(x[1]))+c_viga*(x[2])*(x[3])*(L+(x[1]))
+
+    #Deflexão
+    f2=(4*F*(L**3))/(E*(x[3])*((x[2])**3))
+
+    #Ainda sem restrições
+    peso=0.5
+
+    return peso*f1+(1-peso)*f2
+
+
+
 #Objetive function
 def f(x):
-        return (x[0])**2+(x[1])**2
+    return (x[0])**2+(x[1])**2
 
 #Init array
-in_array=np.array([3.,50.])
+in_array=np.array([0.01,0.1,0.1,0.01])
 
-
+#Optimization Algorithm
 def nelder_mead(f, x_start,
                 step=0.1, no_improve_thr=10e-6,
                 no_improv_break=10, max_iter=0,
@@ -119,4 +148,4 @@ def nelder_mead(f, x_start,
 
 if __name__ == "__main__":
 
-    print (nelder_mead(f, in_array))
+    print (nelder_mead(benchmark_2022, in_array))
